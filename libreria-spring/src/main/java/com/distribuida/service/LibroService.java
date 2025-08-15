@@ -1,6 +1,6 @@
 package com.distribuida.service;
 
-import com.distribuida.model.Factura;
+
 import com.distribuida.model.Libro;
 
 import java.util.List;
