@@ -52,7 +52,11 @@ public class ClienteRepositorioTestIntegracion {
 
     @Test
     public void update(){
+<<<<<<< HEAD
         Optional<Cliente> cliente = clienteRepository.findById(41);
+=======
+        Optional<Cliente> cliente = clienteRepository.findById(40);
+>>>>>>> 356854d (Actualizacion de datos)
 
         assertTrue(cliente.isPresent(), "El cliente con id= 40 debe de existir para ser actualizado.");
 

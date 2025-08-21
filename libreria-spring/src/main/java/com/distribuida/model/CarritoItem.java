@@ -1,0 +1,104 @@
+package com.distribuida.model;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+
+import java.math.BigDecimal;
+
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Entity
+@Table(name="carrito_item"
+,uniqueConstraints = @UniqueConstraint(columnNames= {"id_carrito","id_libro"}))
+
+
+public class CarritoItem {
+
+ @Id
+ @GeneratedValue(strategy = GenerationType.IDENTITY)
+ @Column(name = "id_carrito_item")
+ private Long idCariitoItem;
+
+@JsonBackReference
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_carrito")
+    private Carrito carrito;
+
+@JsonIgnoreProperties({"autor", "categoria"})
+@ManyToOne(optional = false)
+    @JoinColumn(name = "id_libro")
+    private Libro libro;
+
+
+
+@Column(name = "cantidad")
+    private Integer cantidad;
+
+
+@Column(name= "precio_unitario", precision = 12,scale = 2)
+private BigDecimal precioUnitario;
+
+
+@Column(name = "total" , precision = 12, scale = 2)
+    private  BigDecimal total;
+
+private  void jpaCalcTotal(){
+
+    calcTotal();
+}
+
+
+public void calcTotal(){
+
+}
+
+
+/// getter and  setter
+
+    public Long getIdCariitoItem() {
+        return idCariitoItem;
+    }
+
+    public void setIdCariitoItem(Long idCariitoItem) {
+        this.idCariitoItem = idCariitoItem;
+    }
+
+    public Carrito getCarrito() {
+        return carrito;
+    }
+
+    public void setCarrito(Carrito carrito) {
+        this.carrito = carrito;
+    }
+
+    public Libro getLibro() {
+        return libro;
+    }
+
+    public void setLibro(Libro libro) {
+        this.libro = libro;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+}

@@ -54,6 +54,7 @@ public class AutorRepositorioTestIntegracion {
 
     @Test
     public void update(){
+<<<<<<< HEAD
         Optional<Autor> autor = autorRepository.findById(56);
         assertTrue(autor.isPresent(), "El autor con el ID=56 debería existir");
 
@@ -77,6 +78,14 @@ public class AutorRepositorioTestIntegracion {
         }
 
         assertFalse(autorRepository.existsById(55), "El ID=55, debería haberse eliminado");
+=======
+        Optional<Autor> autor = autorRepository.findById(54);
+        assertTrue(autor.isPresent(), "El autor con el ID=54 debería existir");
+
+        autor.orElse(null).setNombre("Melisa");
+        autor.orElse(null).setApellido("Rosales");
+
+>>>>>>> 356854d (Actualizacion de datos)
 
     }
 
