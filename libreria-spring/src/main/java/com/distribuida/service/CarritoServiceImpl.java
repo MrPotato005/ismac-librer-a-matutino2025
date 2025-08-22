@@ -81,48 +81,155 @@ public class CarritoServiceImpl implements CarritoService {
     }
 
     @Override
+    @Transactional
     public Carrito updateItemCantidad(int clienteId, long carritoItemId, int nuevaCantidad) {
-        return null;
+        if(nuevaCantidad < 0) throw new IllegalArgumentException("Cantidad no puede ser negativa");
+
+        var carrito = getByClienteId(clienteId);
+        var item = carritoItemRepository.findById(carritoItemId).orElseThrow(() -> new IllegalArgumentException("Item no encontrado"+ carritoItemId));
+
+
+        if (!item.getCarrito().getIdCarrito().equals(carrito.getIdCarrito())){
+
+            throw new IllegalArgumentException("Item no parece tener en ele carrito del cleinte ");
+
+
+        }
+        if (nuevaCantidad == 0){
+            carrito.getItems().remove(item);
+            carritoItemRepository.delete(item);
+        }else{
+            item.setCantidad(nuevaCantidad);
+            carritoItemRepository.save(item);
+
+        }
+
+        carrito.recomputarTotales(IVA);
+
+
+
+        return carritoRepository.save(carrito);
     }
 
     @Override
+    @Transactional
     public void removeItem(int clienteId, long carritoItemId) {
+    updateItemCantidad(clienteId,carritoItemId,0);
+
+
+
     }
 
     @Override
+    @Transactional
     public void clear(int clienteId) {
+    var carrito = getByClienteId(clienteId);
+    carrito.getItems().clear();
+    carrito.recomputarTotales(IVA);
+    carritoRepository.save(carrito);
     }
 
     @Override
+    @Transactional
     public Carrito getByClienteId(int clienteId) {
-        return null;
+        var cliente = clienteRepository.findById(clienteId).orElseThrow(() ->new IllegalArgumentException("Cliente no encontrado"+clienteId));
+        return carritoRepository.findByCliente(cliente).orElseGet(()->{
+            var c = new Carrito();
+            c.setCliente(cliente);
+            return c;
+        });
     }
 
     @Override
+    @Transactional
     public Carrito getOrCreateByToken(String token) {
-        return null;
+       var c = new Carrito();
+       c.setToken(token);
+       c.setSubtotal(BigDecimal.ZERO);
+       c.setDescuento(BigDecimal.ZERO);
+       c.setImpuestos(BigDecimal.ZERO);
+       c.setTotal(BigDecimal.ZERO);
+        return carritoRepository.save(c);
     }
 
     @Override
+    @Transactional
     public Carrito addItem(String token, int libroId, int cantidad) {
-        return null;
+if (cantidad <= 0 ) throw new IllegalArgumentException("Cantidad debe ser mayor que ser que 0");
+var carrito = getOrCreateByToken(token);
+var libro = libroRepository.findById(libroId).orElseThrow(()-> new IllegalArgumentException("Libor no encontrado: " + libroId));
+        var itemOpt = carritoItemRepository.findByCarritoAndLibro(carrito, libro);
+        if(itemOpt.isPresent()){
+            var item = itemOpt.get();
+            item.setCantidad(item.getCantidad() + cantidad);
+            item.setPrecioUnitario(BigDecimal.valueOf(libro.getPrecio()));
+            item.calcTotal();
+            carritoItemRepository.save(item);
+        }else{
+ var item = new CarritoItem();
+ item.setCarrito(carrito);
+ item.setLibro(libro);
+ item.setCantidad(cantidad);
+ item.setPrecioUnitario(BigDecimal.valueOf(libro.getPrecio()));
+ item.calcTotal();
+ carrito.getItems().add(item);
+        }
+        carrito.recomputarTotales(IVA);
+        return carritoRepository.save(carrito);
     }
 
     @Override
     public Carrito updateItemCantidad(String token, long carritoItemId, int nuevaCantidad) {
-        return null;
+        var carrito = getOrCreateByToken(token);
+        var item = carritoItemRepository.findById(carritoItemId)
+                .orElseThrow(()-> new IllegalArgumentException("Item no encontrado" + carritoItemId));
+
+if (nuevaCantidad <= 0) {
+
+    carrito.getItems().remove(item);
+    carritoItemRepository.delete(item);
+}else{
+
+    item.setCantidad(nuevaCantidad);
+    item.calcTotal();
+    carritoItemRepository.save(item);
+
+
+}
+carrito.recomputarTotales(IVA);
+return carritoRepository.save(carrito);
     }
 
     @Override
+    @Transactional
     public void removeItem(String token, long carritoItemId) {
+   updateItemCantidad(token, carritoItemId,0);
     }
 
     @Override
+    @Transactional
     public void clearByToken(String token) {
+
+    var carrito = getOrCreateByToken(token);
+    carrito.getItems().clear();
+    carrito.setSubtotal(BigDecimal.ZERO);
+    carrito.setDescuento(BigDecimal.ZERO);
+    carrito.setImpuestos(BigDecimal.ZERO);
+    carritoRepository.save(carrito);
     }
 
     @Override
+    @Transactional
     public Carrito getByToken(String token) {
-        return null;
+        return carritoRepository.findByToken(token)
+                .orElseGet(()->{
+                    var c = new Carrito();
+                    c.setToken(token);
+                    c.setSubtotal(BigDecimal.ZERO);
+                    c.setDescuento(BigDecimal.ZERO);
+                    c.setImpuestos(BigDecimal.ZERO);
+                    c.setTotal(BigDecimal.ZERO);
+                    return c;
+                });
     }
 }
