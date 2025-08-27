@@ -8,13 +8,10 @@ import com.distribuida.model.Factura;
 import com.distribuida.service.util.CheckoutMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 @Service
 public class GuestCheckoutServiceImpl implements GuestCheckoutService {
-
 
     private final CarritoRepository carritoRepository;
 private final FacturaRepository facturaRepository;
@@ -22,7 +19,6 @@ private final FacturaDetalleRepository facturaDetalleRepository;
 private final LibroRepository libroRepository;
 
 private static final double IVA = 0.15d;
-
 public GuestCheckoutServiceImpl(
         CarritoRepository carritoRepository,
         FacturaRepository facturaRepository,
@@ -34,9 +30,6 @@ public GuestCheckoutServiceImpl(
     this.facturaRepository = facturaRepository;
     this.facturaDetalleRepository = facturaDetalleRepository;
     this.libroRepository = libroRepository;
-
-
-
 
 }
 
