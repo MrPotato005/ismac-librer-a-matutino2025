@@ -16,7 +16,7 @@ public class CarritoItem {
  @Id
  @GeneratedValue(strategy = GenerationType.IDENTITY)
  @Column(name = "id_carrito_item")
- private Long idCariitoItem;
+ private Long idCarritoItem;
 
 @JsonBackReference
     @ManyToOne(optional = false)
@@ -54,12 +54,12 @@ public void calcTotal(){
 
 /// getter and  setter
 
-    public Long getIdCariitoItem() {
-        return idCariitoItem;
+    public Long getIdCarritoItem() {
+        return idCarritoItem;
     }
 
-    public void setIdCariitoItem(Long idCariitoItem) {
-        this.idCariitoItem = idCariitoItem;
+    public void setIdCarritoItem(Long idCarritoItem) {
+        this.idCarritoItem = idCarritoItem;
     }
 
     public Carrito getCarrito() {

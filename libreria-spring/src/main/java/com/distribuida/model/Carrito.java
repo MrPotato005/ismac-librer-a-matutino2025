@@ -51,7 +51,7 @@ private BigDecimal impuestos = BigDecimal.ZERO;
     @Column(name = "total", precision = 12, scale = 2)
     private BigDecimal total = BigDecimal.ZERO;
 
-    @Column(name = "actualizando_en", nullable = false,insertable = false,updatable = false)
+    @Column(name = "actualizado_en", nullable = false,insertable = false,updatable = false)
     private LocalDateTime actualizandoEn;
 
 
