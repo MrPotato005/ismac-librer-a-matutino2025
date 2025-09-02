@@ -1,58 +1,56 @@
 package com.distribuida.model;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
-@Table(name="carrito_item"
-,uniqueConstraints = @UniqueConstraint(columnNames= {"id_carrito","id_libro"}))
-
-
+@Table(name = "carrito_item"
+        , uniqueConstraints = @UniqueConstraint(columnNames = {"id_carrito", "id_libro"}))
 public class CarritoItem {
 
- @Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
- @Column(name = "id_carrito_item")
- private Long idCarritoItem;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_carrito_item")
+    private Long idCarritoItem;
 
-@JsonBackReference
+    @JsonBackReference
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_carrito")
     private Carrito carrito;
 
-@JsonIgnoreProperties({"autor", "categoria"})
-@ManyToOne(optional = false)
+    @JsonIgnoreProperties({"autor", "categoria"})
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_libro")
     private Libro libro;
 
-
-
-@Column(name = "cantidad")
+    @Column(name = "cantidad")
     private Integer cantidad;
 
+    @Column(name = "precio_unitario", precision = 12, scale = 2)
+    private BigDecimal precioUnitario;
 
-@Column(name= "precio_unitario", precision = 12,scale = 2)
-private BigDecimal precioUnitario;
+    @Column(name = "total", precision = 12, scale = 2)
+    private BigDecimal total;
 
+    @PrePersist @PreUpdate
+    public void jpaCalcTotal(){
+        calcTotal();
+    }
 
-@Column(name = "total" , precision = 12, scale = 2)
-    private  BigDecimal total;
+    public void calcTotal(){
+        if (precioUnitario == null) precioUnitario = BigDecimal.ZERO;
+        if (cantidad == null) cantidad = 0;
+        total = precioUnitario.multiply(BigDecimal.valueOf(cantidad))
+                .setScale(2, RoundingMode.HALF_UP);
+    }
 
-private  void jpaCalcTotal(){
+    //getters an setters
 
-    calcTotal();
-}
-
-
-public void calcTotal(){
-
-}
-
-
-/// getter and  setter
 
     public Long getIdCarritoItem() {
         return idCarritoItem;
