@@ -7,8 +7,7 @@ public class AddItemRequest {
 
     public int getLibroId() {
         return libroId;
-    }
-
+    
     public void setLibroId(int libroId) {
         this.libroId = libroId;
     }
@@ -21,3 +20,7 @@ public class AddItemRequest {
         this.cantidad = cantidad;
     }
 }
+
+
+
+
