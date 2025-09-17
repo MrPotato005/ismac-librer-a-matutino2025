@@ -24,7 +24,6 @@ public GuestCheckoutServiceImpl(
         FacturaRepository facturaRepository,
         FacturaDetalleRepository facturaDetalleRepository,
         LibroRepository libroRepository
-
 ){
     this.carritoRepository= carritoRepository;
     this.facturaRepository = facturaRepository;
@@ -32,8 +31,6 @@ public GuestCheckoutServiceImpl(
     this.libroRepository = libroRepository;
 
 }
-
-
     @Override
     @Transactional
     public Factura checkoutByToken(String token) {
@@ -41,7 +38,6 @@ public GuestCheckoutServiceImpl(
 
     var carrito = carritoRepository.findByToken(token)
             .orElseThrow(()-> new IllegalArgumentException("No existe carrito para el token "));
-
     if(carrito.getItems() == null || carrito.getItems().isEmpty()){
 
         throw new IllegalArgumentException("El carrito esta vacio");
